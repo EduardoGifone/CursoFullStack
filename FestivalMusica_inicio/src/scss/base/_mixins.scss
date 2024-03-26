@@ -1,0 +1,48 @@
+@use "base/variables" as v;
+
+// @mixin heading($color: black, $border-radius: false) {
+//   text-transform: uppercase;
+//   font-size: 2.4rem;
+//   color: $color;
+//   background-color: black;
+
+//   @if $border-radius {
+//     border-radius: 1rem;
+//   }
+// }
+
+@mixin phone {
+  @media (min-width: v.$telefono){
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: v.$tablet){
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: v.$desktop){
+    @content;
+  }
+}
+
+@mixin tv {
+  @media (min-width: v.$tv){
+    @content;
+  }
+}
+
+@mixin grid($columnas, $gap) {
+    display: grid;
+    grid-template-columns: repeat($columnas, 1fr);
+    gap: $gap;
+}
+
+@mixin resetear-lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
