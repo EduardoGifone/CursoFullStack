@@ -1,6 +1,6 @@
 // Variables
 
-var disponible; // Iniciar varialble
+var disponible; // Inicializar varialble
 
 var producto = 'Audifonos Gamer'; // Iniciar variable y dar valor
 
