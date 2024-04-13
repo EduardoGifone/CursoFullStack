@@ -1,0 +1,13 @@
+@include tablet {
+    .contenido-nosotros {
+        @include grid(2, 3rem);
+    }
+}
+
+.contenido-nosotros {
+    h3 {
+        font-size: 2rem;
+        text-align: left;
+        font-weight: $black;
+    }
+}
