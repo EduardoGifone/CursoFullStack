@@ -25,12 +25,15 @@
 
     .thead {
         background-color: $verde;
-        padding: .5rem 2rem;
+        padding: 2rem;
         color: $blanco;
     }
-
 
     .boton-rojo-block {
         margin-top: 0;
     }
+}
+
+.imagen-propiedad {
+    max-width: 40rem;
 }
