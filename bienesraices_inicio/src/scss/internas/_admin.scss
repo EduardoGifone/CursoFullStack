@@ -9,4 +9,28 @@
     &.error {
         background-color: $rojo;
     }
+
+    &.exito {
+        background-color: $verde;
+    }
+}
+
+.tabla {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+
+    .thead {
+        background-color: $verde;
+        padding: .5rem 2rem;
+        color: $blanco;
+    }
+
+
+    .boton-rojo-block {
+        margin-top: 0;
+    }
 }

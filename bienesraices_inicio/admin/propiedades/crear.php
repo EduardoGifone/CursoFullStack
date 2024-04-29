@@ -24,32 +24,70 @@
     // Ejecutar el codigo despues de que el usuario envia el formulario
     if ($_SERVER["REQUEST_METHOD"] === "POST"){
 
-        $titulo = $_POST["titulo"];
-        $precio = $_POST["precio"];
-        $descripcion = $_POST["descripcion"];
-        $habitaciones = $_POST["habitaciones"];
-        $wc = $_POST["wc"];
-        $estacionamiento = $_POST["estacionamiento"];
-        $vendedores_id = $_POST["vendedor"];
+        // echo "<pre>";
+        // var_dump($_POST);
+        // echo "</pre>";
+
+        // echo "<pre>";
+        // var_dump($_FILES);
+        // echo "</pre>";
+
+
+        $titulo = mysqli_real_escape_string( $db,  $_POST["titulo"] );
+        $precio = mysqli_real_escape_string( $db,  $_POST["precio"] );
+        $descripcion = mysqli_real_escape_string( $db,  $_POST["descripcion"] );
+        $habitaciones = mysqli_real_escape_string( $db,  $_POST["habitaciones"] );
+        $wc = mysqli_real_escape_string( $db,  $_POST["wc"] );
+        $estacionamiento = mysqli_real_escape_string( $db,  $_POST["estacionamiento"] );
+        $vendedores_id = mysqli_real_escape_string( $db,  $_POST["vendedor"] ?? "" );
+
+        // Asignar files haci una variables
+        $imagen = $_FILES["imagen"];
 
         if(!$titulo) $errores[] = "El titulo es obligatorio";
         if(!$precio) $errores[] = "El precio es obligatorio";
+
+        if(!$imagen["name"] || $imagen["error"]) $errores[] = "La imagen es obligatoria";
+
         if(strlen($descripcion) < 50) $errores[] = "La descripcion tiene que ser mas larga";
         if(!$habitaciones) $errores[] = "El numero de habitaciones es obligatorio";
         if(!$wc) $errores[] = "El numero de baños es obligatorio";
         if(!$estacionamiento) $errores[] = "El numero de estacionamientos es obligatorio";
         if(!$vendedores_id) $errores[] = "El vendedor es obligatorio";
 
+        // Validar por tamanio (100 KB maximo)
+        $medida = 1000 * 1000;
+
+        if ($imagen["size"] > $medida) $errores[] = "La imagen es muy pesada";
+
         if (empty($errores)) {
+
+            // SUBIDA DE ARCHIVOS
+
+            // Crear carpeta
+
+            $carpetaImagenes = "../../imagenes/";
+
+            if(!is_dir($carpetaImagenes)){
+                mkdir($carpetaImagenes);
+            }
+
+            // Generar un nombre unico
+            $nombreImagen = md5( uniqid( rand(), true)) . ".jpg";
+
+            // Subir imagen
+
+            move_uploaded_file($imagen["tmp_name"], $carpetaImagenes . $nombreImagen);
+
             // Insertar en la base de datos
-            $query = " INSERT INTO propiedades (titulo, precio, descripcion, habitaciones, wc, estacionamiento, creado, vendedores_id)
-                    VALUES ('$titulo', '$precio', '$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$creado', '$vendedores_id')";
+            $query = " INSERT INTO propiedades (titulo, precio, imagen, descripcion, habitaciones, wc, estacionamiento, creado, vendedores_id)
+                    VALUES ('$titulo', '$precio', '$nombreImagen', '$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$creado', '$vendedores_id')";
     
             $resultado = mysqli_query($db, $query);
     
             if ($resultado){
                 // Redirecionando a admin
-                header("Location: /admin");
+                header("Location: /admin?resultado=1");
             }
         }
     }
@@ -72,7 +110,7 @@
             </div>
         <?php }?>
 
-        <form class="formulario" method="POST" action="/admin/propiedades/crear.php">
+        <form class="formulario" method="POST" action="/admin/propiedades/crear.php" enctype="multipart/form-data">
             <fieldset>
                 <legend>Informacion General</legend>
 
@@ -83,7 +121,7 @@
                 <input type="number" id="precio" name="precio" placeholder="Precio de la propiedad" value="<?php echo $precio ?>">
 
                 <label for="imagen">Imagen:</label>
-                <input type="file" id="imagen" accept="image/jpeg">
+                <input type="file" id="imagen" accept="image/jpeg, image/png" name="imagen">
 
                 <label for="descripcion">Descripcion:</label>
                 <textarea id="descripcion" name="descripcion"><?php echo $descripcion ?></textarea>
