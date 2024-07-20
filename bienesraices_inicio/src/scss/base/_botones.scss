@@ -8,6 +8,7 @@
 
 .boton-verde {
     @include boton($verde, inline-block);
+    width: 100%
 }
 
 .boton-verde-block {
